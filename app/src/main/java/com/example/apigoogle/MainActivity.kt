@@ -31,7 +31,6 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClic
         var borrar:ArrayList<LatLng>
         borrar=ArrayList<LatLng>()
         mMap.setOnMarkerClickListener { marcador ->
-            puntos=lista2.points.size-1;
             for (i in 0..lista2.points.size-1) {
                 if (lista2.points[i]==marcador.position){
                     //borrar.add(marcador.position)
