@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 
 class MainActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -30,24 +28,42 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClic
             CameraUpdateFactory.newLatLngZoom(LatLng(-1.080428, -79.501368), 19F)
         mMap.moveCamera(camUpd1)
         mMap.setOnMapClickListener(this);
-        lista=PolylineOptions()
+        var borrar:ArrayList<LatLng>
+        borrar=ArrayList<LatLng>()
+        mMap.setOnMarkerClickListener { marcador ->
+            for (i in 0..lista2.points.size-1) {
+                if (lista2.points[i]==marcador.position){
+                    //borrar.add(marcador.position)
+                    if(puntos==4){
+                        lista.remove()
+                    }
+                    lista2.points.remove(marcador.position)
+                    marcador.remove()
+                    puntos=puntos-1;
+                    break;
+                }
+            }
+            true
+        }
+        lista2=PolylineOptions()
     }
 
-    lateinit var lista:PolylineOptions
+    lateinit var lista:Polyline
+    lateinit var lista2:PolylineOptions
     var puntos=0
 
     override fun onMapClick(point: LatLng) {
         var punto = LatLng(point.latitude,point.longitude);
-        if(puntos<5){
-            lista.add(point)
+        if(puntos<4){
+            lista2.add(point)
             puntos++;
         }
-        if(puntos==5){
-            lista.width(8F);
-            lista.color(Color.RED);
-            mMap.addPolyline(lista);
+        if(puntos==4){
+            lista2.add(lista2.points[0])
+            lista2.width(8F);
+            lista2.color(Color.RED);
+            lista=mMap.addPolyline(lista2);
             puntos=0;
-            lista=PolylineOptions()
         }
 
         mMap.addMarker(
